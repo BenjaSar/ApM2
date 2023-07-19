@@ -34,10 +34,10 @@ class FeatureEngineeringPipeline(object):
         :return pandas_df: The desired DataLake table as a DataFrame
         :rtype: pd.DataFrame
         """
-        input_path = '../data'
+        input_path = '././data/'
 
-        data_train = pd.read_csv(input_path + '/Train_BigMart.csv')
-        data_test = pd.read_csv(input_path + '/Test_BigMart.csv')
+        data_train = pd.read_csv(input_path + 'Train_BigMart.csv')
+        data_test = pd.read_csv(input_path + 'Test_BigMart.csv')
         pandas_df = pd.concat([data_train, data_test], ignore_index=True, sort=False)
         print(pandas_df.head(20))
 
@@ -49,7 +49,19 @@ class FeatureEngineeringPipeline(object):
         COMPLETAR DOCSTRING
         
         """
+        
+        df.describe()
         df['Outlet_Establishment_Year'] = 2020 - df['Outlet_Establishment_Year']
+
+        #Unify labels for "Item_Fat_Content "
+        df['Item_Fat_Content'] = df['Item_Fat_Content'].replace({'low fat':  'Low Fat', 'LF': 'Low Fat', 'reg': 'Regular'})
+        
+        # Verificamos la unificación de etiquetas
+        set(df['Item_Fat_Content'])
+
+        
+
+        print(df)
         
         
         return df_transformed
@@ -67,11 +79,10 @@ class FeatureEngineeringPipeline(object):
     def run(self):
     
         df = self.read_data()
-        self.write_prepared_data(panda_df)
-     #   df_transformed = self.data_transformation(df)
+        df_transformed = self.data_transformation(df)
      #   self.write_prepared_data(df_transformed)
 
   
 if __name__ == "__main__":
-    FeatureEngineeringPipeline(input_path = '../data/Train_BigMart.csv',
-                               output_path = '../data/Mi/dataTest').run()
+    FeatureEngineeringPipeline(input_path = '../data/', 
+                               output_path = '../data/dataTest.csv').run()
