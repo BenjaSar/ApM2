@@ -59,9 +59,19 @@ class FeatureEngineeringPipeline(object):
         # Verificamos la unificación de etiquetas
         set(df['Item_Fat_Content'])
 
-        
+        #LIMPIEZA: faltante peso productos
+        productos = list(df[df['Item_Weight'].isnull()]['Item_Identifier'].unique())
+        for producto in productos:
+            moda = (df[df['Item_Identifier'] == producto][['Item_Weight']]).mode().iloc[0,0]
+            df.loc[df['Item_Identifier'] == producto, 'Item_Weight'] = moda
 
-        print(df)
+        # LIMPIEZA: faltante en el tamaño de las tiendas
+        outlets = list(df[df['Outlet_Size'].isnull()]['Outlet_Identifier'].unique())
+
+        for outlet in outlets:
+            df.loc[df['Outlet_Identifier'] == outlet, 'Outlet_Size'] =  'Small'
+
+        print(outlet)
         
         
         return df_transformed
@@ -74,7 +84,18 @@ class FeatureEngineeringPipeline(object):
         
         # COMPLETAR CON CÓDIGO
         
-        return None
+        #return None
+
+    def missing_values_outlet(self, df:pd.DataFrame) -> pd.DataFrame:
+        df[df['Outlet_Size'].isnull()].sort_values('Item_Identifier').tail(10)
+        
+        print(list(df[df['Outlet_Size'].isnull()]['Outlet_Identifier'].unique()))
+        print(f'Evaluando missing values')
+
+        # Verificación tamaño registro tienda
+        outlets = list(df[df['Outlet_Size'].isnull()]['Outlet_Identifier'].unique())
+
+        return df_outlet
 
     def run(self):
     
