@@ -71,7 +71,18 @@ class FeatureEngineeringPipeline(object):
         for outlet in outlets:
             df.loc[df['Outlet_Identifier'] == outlet, 'Outlet_Size'] =  'Small'
 
-        print(outlet)
+        #New category item fat
+        df.loc[df['Item_Type'] == 'Non perishable', 'Item_Fat_Content'] = 'NA'
+
+        # FEATURES ENGINEERING: creando categorías para 'Item_Type'
+        df['Item_Type'] = df['Item_Type'].replace({'Others': 'Non perishable', 'Health and Hygiene': 'Non perishable', 'Household': 'Non perishable',
+                                                       'Seafood': 'Meats', 'Meat': 'Meats','Baking Goods': 'Processed Foods', 
+                                                       'Frozen Foods': 'Processed Foods', 'Canned': 'Processed Foods', 'Snack Foods': 'Processed Foods',
+                                                       'Breads': 'Starchy Foods', 'Breakfast': 'Starchy Foods',
+                                                       'Soft Drinks': 'Drinks', 'Hard Drinks': 'Drinks', 'Dairy': 'Drinks'})
+
+
+        df['Item_Type'].unique()
         
         
         return df_transformed
@@ -85,17 +96,6 @@ class FeatureEngineeringPipeline(object):
         # COMPLETAR CON CÓDIGO
         
         #return None
-
-    def missing_values_outlet(self, df:pd.DataFrame) -> pd.DataFrame:
-        df[df['Outlet_Size'].isnull()].sort_values('Item_Identifier').tail(10)
-        
-        print(list(df[df['Outlet_Size'].isnull()]['Outlet_Identifier'].unique()))
-        print(f'Evaluando missing values')
-
-        # Verificación tamaño registro tienda
-        outlets = list(df[df['Outlet_Size'].isnull()]['Outlet_Identifier'].unique())
-
-        return df_outlet
 
     def run(self):
     
