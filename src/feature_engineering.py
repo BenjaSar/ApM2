@@ -13,7 +13,6 @@ import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-#%matplotlib inline
 import datetime as dt
 from scipy import stats
 
@@ -48,9 +47,12 @@ class FeatureEngineeringPipeline(object):
             train_file = 'Train_BigMart.csv'
             train_data = os.path.join(input_path, train_file)
             data_train = pd.read_csv(train_data)
+            data_train['Set'] = 'train'
             test_file = 'Test_BigMart.csv'
             test_data = os.path.join(input_path, test_file)
             data_test = pd.read_csv(test_data)
+            data_test['Set'] = 'test'
+
             pandas_df = pd.concat([data_train, data_test], ignore_index=True, sort=False)
             print(pandas_df.head(20))
 
@@ -105,10 +107,11 @@ class FeatureEngineeringPipeline(object):
         
         data['Outlet_Size'] = data['Outlet_Size'].replace({'High': 2, 'Medium': 1, 'Small': 0})
         data['Outlet_Location_Type'] = data['Outlet_Location_Type'].replace({'Tier 1': 2, 'Tier 2': 1, 'Tier 3': 0}) 
+        print(data.head(5))
 
         #Codificación de variables nominales
         data_transformed = pd.get_dummies(data, columns=['Outlet_Type'], dtype=int)
-        print(data.head(6))
+        data_transformed.info()
         
         
         return data_transformed

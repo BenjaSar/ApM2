@@ -47,15 +47,35 @@ class ModelTrainingPipeline(object):
         return pandas_df
 
     
-    #def model_training(self, df: pd.DataFrame) -> pd.DataFrame:
+    def model_training(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         COMPLETAR DOCSTRING
         
         """
+        dataset = df.drop(columns=['Item_Identifier', 'Outlet_Identifier']) 
+
+        #Division del dataset en train y test
+        df_train = dataset.loc[df['Set'] == 'train']
+        df_test  = dataset.loc[df['Set'] == 'test']
+
+        # Eliminando columnas sin datos
+        df_train.drop(['Unnamed: 0','Set'], axis=1, inplace=True)
+        print(df_train.head(5))
+        df_test.drop(['Unnamed: 0', 'Item_Outlet_Sales','Set'], axis=1, inplace=True)
+
+        try:
+            out_path = './model'
+            train_file = 'train_final.csv'
+            test_file  = 'test_final.csv'
+            output_train = os.path.join(out_path, train_file)
+            output_test = os.path.join(out_path, test_file)
+            df_train.to_csv(output_train)
+            df_test.to_csv(output_test)
+        except Exception as error: 
+            print("An exception ocurred: ", type(error).__name__,"-", error) 
         
-        # COMPLETAR CON CÓDIGO
-        
-        return df_transformed
+        #return df_transformed
+        return df_train
 
     #def model_dump(self, model_trained) -> None:
         """
@@ -70,7 +90,7 @@ class ModelTrainingPipeline(object):
     def run(self):
     
         df = self.read_data()
-    #    model_trained = self.model_training(df)
+        model_trained = self.model_training(df)
     #    self.model_dump(model_trained)
 
 if __name__ == "__main__":
