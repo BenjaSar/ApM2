@@ -9,38 +9,50 @@ FECHA:
 """
 
 # Imports
-
-import glob
 import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 #%matplotlib inline
 import datetime as dt
-import seaborn as sns
-from sklearn.ensemble import RandomForestClassifier, RandomTreesEmbedding
 from scipy import stats
 
 
 class FeatureEngineeringPipeline(object):
+    """This is a function to generate the feature 
+    engineering and the EDA proccess
+
+    Args:
+        object (_type_): _description_
+    """
 
     def __init__(self, input_path, output_path):
         self.input_path = input_path
         self.output_path = output_path
 
     def read_data(self) -> pd.DataFrame:
+        """_summary_
+
+        Returns:
+            pd.DataFrame: _description_
+        """
+        
         """
         COMPLETAR DOCSTRING 
         :return pandas_df: The desired DataLake table as a DataFrame
         :rtype: pd.DataFrame
         """
-        input_path = '././data/'
 
-        data_train = pd.read_csv(input_path + 'Train_BigMart.csv')
-        data_test = pd.read_csv(input_path + 'Test_BigMart.csv')
-        pandas_df = pd.concat([data_train, data_test], ignore_index=True, sort=False)
-        print(pandas_df.head(20))
+        try:
+            input_path = '././data/'
+            data_train = pd.read_csv(input_path + 'Train_BigMart.csv')
+            data_test = pd.read_csv(input_path + 'Test_BigMart.csv')
+            pandas_df = pd.concat([data_train, data_test], ignore_index=True, sort=False)
+            print(pandas_df.head(20))
 
+        except Exception as error: 
+            print("An exception ocurred: ", type(error).__name__,"-", error) 
+        
         return pandas_df
 
     
@@ -94,29 +106,36 @@ class FeatureEngineeringPipeline(object):
         data['Outlet_Location_Type'] = data['Outlet_Location_Type'].replace({'Tier 1': 2, 'Tier 2': 1, 'Tier 3': 0}) 
 
         #Codificación de variables nominales
-        data = pd.get_dummies(data, columns=['Outlet_Type'], dtype=int)
+        data_transformed = pd.get_dummies(data, columns=['Outlet_Type'], dtype=int)
         print(data.head(6))
         
-        return data
-        #return df_transformed
+        
+        return data_transformed
 
-   # def write_prepared_data(self, transformed_dataframe: pd.DataFrame) -> None:
+    def write_prepared_data(self, transformed_df: pd.DataFrame) -> None:
         """
         COMPLETAR DOCSTRING
         
         """
         
         # COMPLETAR CON CÓDIGO
-        
-        #return None
+        try:
+            out_path = './data/'
+            name_file = 'dataframe.csv'
+            output_file = os.path.join(out_path, name_file)
+            transformed_df.to_csv(output_file)
+        except Exception as error: 
+            print("An exception ocurred: ", type(error).__name__,"-", error) 
+            
+        return None
 
     def run(self):
     
         df = self.read_data()
         df_transformed = self.data_transformation(df)
-     #   self.write_prepared_data(df_transformed)
+        self.write_prepared_data(df_transformed)
 
   
 if __name__ == "__main__":
     FeatureEngineeringPipeline(input_path = '../data/', 
-                               output_path = '../data/dataTest.csv').run()
+                               output_path = '../data/').run()
