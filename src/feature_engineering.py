@@ -44,9 +44,13 @@ class FeatureEngineeringPipeline(object):
         """
 
         try:
-            input_path = '././data/'
-            data_train = pd.read_csv(input_path + 'Train_BigMart.csv')
-            data_test = pd.read_csv(input_path + 'Test_BigMart.csv')
+            input_path = './data/'
+            train_file = 'Train_BigMart.csv'
+            train_data = os.path.join(input_path, train_file)
+            data_train = pd.read_csv(train_data)
+            test_file = 'Test_BigMart.csv'
+            test_data = os.path.join(input_path, test_file)
+            data_test = pd.read_csv(test_data)
             pandas_df = pd.concat([data_train, data_test], ignore_index=True, sort=False)
             print(pandas_df.head(20))
 
@@ -92,10 +96,7 @@ class FeatureEngineeringPipeline(object):
                                                        'Frozen Foods': 'Processed Foods', 'Canned': 'Processed Foods', 'Snack Foods': 'Processed Foods',
                                                        'Breads': 'Starchy Foods', 'Breakfast': 'Starchy Foods',
                                                        'Soft Drinks': 'Drinks', 'Hard Drinks': 'Drinks', 'Dairy': 'Drinks'})
-
-
-        #df['Item_Type'].unique()
-        
+       
         #Codificación de los precios de productos
         df['Item_MRP'] = pd.qcut(df['Item_MRP'], 4, labels = [1, 2, 3, 4])
 
@@ -120,7 +121,7 @@ class FeatureEngineeringPipeline(object):
         
         # COMPLETAR CON CÓDIGO
         try:
-            out_path = './data/'
+            out_path = './data'
             name_file = 'dataframe.csv'
             output_file = os.path.join(out_path, name_file)
             transformed_df.to_csv(output_file)
@@ -137,5 +138,5 @@ class FeatureEngineeringPipeline(object):
 
   
 if __name__ == "__main__":
-    FeatureEngineeringPipeline(input_path = '../data/', 
-                               output_path = '../data/').run()
+    FeatureEngineeringPipeline(input_path = './data/', 
+                               output_path = './data/').run()

@@ -9,6 +9,15 @@ FECHA:
 """
 
 # Imports
+import os
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+#%matplotlib inline
+import datetime as dt
+import seaborn as sns
+from sklearn.ensemble import RandomForestClassifier, RandomTreesEmbedding
+from scipy import stats
 
 class ModelTrainingPipeline(object):
 
@@ -24,12 +33,21 @@ class ModelTrainingPipeline(object):
         :rtype: pd.DataFrame
         """
             
-        # COMPLETAR CON CÓDIGO
+        try:
+            input_path = './data/'
+            train_file = 'dataframe.csv'
+            train_data = os.path.join(input_path, train_file)
+            pandas_df = pd.read_csv(train_data)
+            
+            print(pandas_df.head(20))
+
+        except Exception as error: 
+            print("An exception ocurred: ", type(error).__name__,"-", error) 
         
         return pandas_df
 
     
-    def model_training(self, df: pd.DataFrame) -> pd.DataFrame:
+    #def model_training(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         COMPLETAR DOCSTRING
         
@@ -39,7 +57,7 @@ class ModelTrainingPipeline(object):
         
         return df_transformed
 
-    def model_dump(self, model_trained) -> None:
+    #def model_dump(self, model_trained) -> None:
         """
         COMPLETAR DOCSTRING
         
@@ -52,10 +70,10 @@ class ModelTrainingPipeline(object):
     def run(self):
     
         df = self.read_data()
-        model_trained = self.model_training(df)
-        self.model_dump(model_trained)
+    #    model_trained = self.model_training(df)
+    #    self.model_dump(model_trained)
 
 if __name__ == "__main__":
 
-    ModelTrainingPipeline(input_path = 'Ruta/De/Donde/Voy/A/Leer/Mis/Datos',
-                          model_path = 'Ruta/Donde/Voy/A/Escribir/Mi/Modelo').run()
+    ModelTrainingPipeline(input_path = './data/',
+                          model_path = '../model').run()
