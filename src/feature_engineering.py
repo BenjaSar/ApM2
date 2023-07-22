@@ -82,10 +82,23 @@ class FeatureEngineeringPipeline(object):
                                                        'Soft Drinks': 'Drinks', 'Hard Drinks': 'Drinks', 'Dairy': 'Drinks'})
 
 
-        df['Item_Type'].unique()
+        #df['Item_Type'].unique()
         
+        #Codificación de los precios de productos
+        df['Item_MRP'] = pd.qcut(df['Item_MRP'], 4, labels = [1, 2, 3, 4])
+
+        #Codificación de variables ordinales
+        data = df.drop(columns=['Item_Type', 'Item_Fat_Content']).copy()        
         
-        return df_transformed
+        data['Outlet_Size'] = data['Outlet_Size'].replace({'High': 2, 'Medium': 1, 'Small': 0})
+        data['Outlet_Location_Type'] = data['Outlet_Location_Type'].replace({'Tier 1': 2, 'Tier 2': 1, 'Tier 3': 0}) 
+
+        #Codificación de variables nominales
+        data = pd.get_dummies(data, columns=['Outlet_Type'], dtype=int)
+        print(data.head(6))
+        
+        return data
+        #return df_transformed
 
    # def write_prepared_data(self, transformed_dataframe: pd.DataFrame) -> None:
         """
