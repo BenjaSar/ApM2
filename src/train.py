@@ -88,28 +88,28 @@ class ModelTrainingPipeline(object):
         """        
         dataset = df.drop(columns=['Item_Identifier', 'Outlet_Identifier'])
 
-        # Division del dataset en train y test
+        # Split of the dataset in train y test sets
         df_train = dataset.loc[df['Set'] == 'train']
         df_test = dataset.loc[df['Set'] == 'test']
 
-        # Eliminando columnas sin datos
+        # Deleting columns without data
         df_train.drop(['Unnamed: 0', 'Set'], axis=1, inplace=True)
         print(df_train.head(5))
         df_test.drop(['Unnamed: 0', 'Item_Outlet_Sales', 'Set'],
                      axis=1, inplace=True)
 
-        # Escribiendo el modelo en un archivo
+        # Writing the model in a file
         write_model(dataframe_train=df_train, dataframe_test=df_test)
 
         seed = 28
         model = LinearRegression()
 
-        # División de dataset de entrenaimento y validación
+        # Splitting of  the dataset in training and validation sets
         X = df_train.drop(columns='Item_Outlet_Sales')
         x_train, x_val, y_train, y_val = train_test_split(
             X, df_train['Item_Outlet_Sales'], test_size=0.3, random_state=seed)
 
-        # Entrenamiento del modelo
+        # Training the model
         trained_model = model.fit(x_train, y_train)
 
         return trained_model, x_val
