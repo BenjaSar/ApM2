@@ -13,13 +13,45 @@ import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-#%matplotlib inline
-import datetime as dt
-import seaborn as sns
-from sklearn.ensemble import RandomForestClassifier, RandomTreesEmbedding
-from scipy import stats
+from sklearn import metrics
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+import pickle
+
+
+def write_model(dataframe_train, dataframe_test):
+    """_summary_
+
+    Args:
+        dataframe_train (_type_): _description_
+        dataframe_test (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """    
+    try:
+        out_path = '../model'
+        train_file = 'train_final.csv'
+        test_file = 'test_final.csv'
+        output_train = os.path.join(out_path, train_file)
+        output_test = os.path.join(out_path, test_file)
+        dataframe_train.to_csv(output_train)
+        print(f'Writing  dataframe train...')
+        dataframe_test.to_csv(output_test)
+        print(f'Writing dataframe test...')
+
+    except Exception as error:
+        print("An exception has ocurred: ", type(error).__name__, "-", error)
+
+    return train_file, test_file
+
 
 class ModelTrainingPipeline(object):
+    """_summary_
+
+    Args:
+        object (_type_): _description_
+    """    
 
     def __init__(self, input_path, model_path):
         self.input_path = input_path
@@ -28,72 +60,85 @@ class ModelTrainingPipeline(object):
     def read_data(self) -> pd.DataFrame:
         """
         COMPLETAR DOCSTRING 
-        
+
         :return pandas_df: The desired DataLake table as a DataFrame
         :rtype: pd.DataFrame
         """
-            
         try:
-            input_path = './data/'
+            input_path = '../data/'
             train_file = 'dataframe.csv'
             train_data = os.path.join(input_path, train_file)
             pandas_df = pd.read_csv(train_data)
-            
+
             print(pandas_df.head(20))
 
-        except Exception as error: 
-            print("An exception ocurred: ", type(error).__name__,"-", error) 
-        
+        except Exception as error:
+            print("An exception has ocurred: ", type(error).__name__, "-", error)
+
         return pandas_df
 
-    
-    def model_training(self, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        COMPLETAR DOCSTRING
-        
-        """
-        dataset = df.drop(columns=['Item_Identifier', 'Outlet_Identifier']) 
+    def model_training(self, df: pd.DataFrame):
+        """_summary_
 
-        #Division del dataset en train y test
+        Args:
+            df (pd.DataFrame): _description_
+
+        Returns:
+            _type_: _description_
+        """        
+        dataset = df.drop(columns=['Item_Identifier', 'Outlet_Identifier'])
+
+        # Division del dataset en train y test
         df_train = dataset.loc[df['Set'] == 'train']
-        df_test  = dataset.loc[df['Set'] == 'test']
+        df_test = dataset.loc[df['Set'] == 'test']
 
         # Eliminando columnas sin datos
-        df_train.drop(['Unnamed: 0','Set'], axis=1, inplace=True)
+        df_train.drop(['Unnamed: 0', 'Set'], axis=1, inplace=True)
         print(df_train.head(5))
-        df_test.drop(['Unnamed: 0', 'Item_Outlet_Sales','Set'], axis=1, inplace=True)
+        df_test.drop(['Unnamed: 0', 'Item_Outlet_Sales', 'Set'],
+                     axis=1, inplace=True)
 
-        try:
-            out_path = './model'
-            train_file = 'train_final.csv'
-            test_file  = 'test_final.csv'
-            output_train = os.path.join(out_path, train_file)
-            output_test = os.path.join(out_path, test_file)
-            df_train.to_csv(output_train)
-            df_test.to_csv(output_test)
-        except Exception as error: 
-            print("An exception ocurred: ", type(error).__name__,"-", error) 
-        
-        #return df_transformed
-        return df_train
+        # Escribiendo el modelo en un archivo
+        write_model(dataframe_train=df_train, dataframe_test=df_test)
 
-    #def model_dump(self, model_trained) -> None:
-        """
-        COMPLETAR DOCSTRING
-        
-        """
-        
-        # COMPLETAR CON CÓDIGO
-        
+        seed = 28
+        model = LinearRegression()
+
+        # División de dataset de entrenaimento y validación
+        X = df_train.drop(columns='Item_Outlet_Sales')
+        x_train, x_val, y_train, y_val = train_test_split(
+            X, df_train['Item_Outlet_Sales'], test_size=0.3, random_state=seed)
+
+        # Entrenamiento del modelo
+        trained_model = model.fit(x_train, y_train)
+
+        return trained_model, x_val
+
+    def model_dump(self, model_trained) -> None:
+        """_summary_
+
+        Args:
+            model_trained (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """        
+        out_path = '../model'
+        trained_file = "trained_model"
+        model_output = open(os.path.join(out_path, trained_file), 'wb')
+        print(f'Writing pickle file....')
+        pickle.dump(model_trained, model_output)
+
         return None
 
     def run(self):
-    
+
         df = self.read_data()
         model_trained = self.model_training(df)
-    #    self.model_dump(model_trained)
+        self.model_dump(model_trained)
+
 
 if __name__ == "__main__":
 
-    ModelTrainingPipeline(input_path = './data/',
-                          model_path = '../model').run()
+    ModelTrainingPipeline(input_path='../data/',
+                          model_path='../model').run()
