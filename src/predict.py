@@ -104,10 +104,11 @@ class MakePredictionPipeline(object):
         df_preds = self.make_predictions(data)
         self.write_predictions(df_preds)
 
+
 if __name__ == "__main__":
 
-	pipeline = MakePredictionPipeline(
-		input_path='dataframe.csv',
-            	output_path='./src',
-            	model_path='trained_model')
-	pipeline.run()
+    pipeline = MakePredictionPipeline(
+        input_path='dataframe.csv',
+        output_path='./src',
+        model_path='trained_model')
+    pipeline.run()
