@@ -1,11 +1,11 @@
 """
 feature_engineering.py
 
-COMPLETAR DOCSTRING
-
-DESCRIPCIÓN:
-AUTOR:
-FECHA:
+DESCRIPTION:
+AUTHORS:
+FS
+Vilcamiza Espinoza, Gerardo Alexis
+Date: July 19th 2023
 """
 
 # Imports

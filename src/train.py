@@ -1,11 +1,11 @@
 """
 train.py
 
-COMPLETAR DOCSTRING
-
-DESCRIPCIÓN:
-AUTOR:
-FECHA:
+DESCRIPCTION:
+AUTHORS:
+FS
+Vilcamiza Espinoza, Gerardo Alexis
+Date: July 22rd 2023
 """
 
 # Imports

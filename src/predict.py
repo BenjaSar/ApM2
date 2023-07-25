@@ -1,10 +1,10 @@
 """
 predict.py
 
-COMPLETAR DOCSTRING
-
 DESCRIPCIÓN:
-AUTOR: Vilcamiza Espinoza, Gerardo Alexis
+AUTORS: 
+Vilcamiza Espinoza, Gerardo Alexis
+Sarmiento Fabián
 FECHA: 24 julio 2023
 """
 
@@ -51,7 +51,7 @@ class MakePredictionPipeline(object):
 
         try:
             logging.info("Loading model from: {}".format(self.model_path))
-            self.model = joblib.load(self.model_path)  # Use the appropriate function from the corresponding library  # noqa E501
+            self.model = joblib.load(self.model_path)  # library  # noqa E501
         except FileNotFoundError:
             logging.error("File not found: {}".format(self.model_path))
         except Exception as e:
