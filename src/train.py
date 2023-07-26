@@ -19,16 +19,16 @@ from sklearn.model_selection import train_test_split
 import pickle
 
 
-def write_model(dataframe_train, dataframe_test):
-    """_summary_
+def write_model(dataframe_train: pd.DataFrame, dataframe_test: pd.DataFrame):
+    """This function receive the dataset for training and testing 
 
     Args:
-        dataframe_train (_type_): _description_
-        dataframe_test (_type_): _description_
+        dataframe_train (pd.Dataframe): Dataframe for training
+        dataframe_test (pd.Dataframe): Datafrane for testing
 
     Returns:
-        _type_: _description_
-    """    
+        csv files: train and test files in csv format 
+    """
     try:
         out_path = '../model'
         train_file = 'train_final.csv'
@@ -51,21 +51,19 @@ class ModelTrainingPipeline(object):
 
     Args:
         object (_type_): _description_
-    """    
+    """
 
     def __init__(self, input_path, model_path):
         self.input_path = input_path
         self.model_path = model_path
 
     def read_data(self) -> pd.DataFrame:
-        """
-        COMPLETAR DOCSTRING 
+        """This function read the dataframe from train file.
 
-        :return pandas_df: The desired DataLake table as a DataFrame
-        :rtype: pd.DataFrame
+        Returns:
+            pd.DataFrame> The desired datalake table as Dataframe
         """
         try:
-            #input_path = '../data/'
             train_file = 'dataframe.csv'
             train_data = os.path.join(self.input_path, train_file)
             pandas_df = pd.read_csv(train_data)
@@ -73,7 +71,8 @@ class ModelTrainingPipeline(object):
             print(pandas_df.head(20))
 
         except Exception as error:
-            print("An exception has ocurred: ", type(error).__name__, "-", error)
+            print("An exception has ocurred: ",
+                  type(error).__name__, "-", error)
 
         return pandas_df
 
@@ -81,11 +80,11 @@ class ModelTrainingPipeline(object):
         """_summary_
 
         Args:
-            df (pd.DataFrame): _description_
+            df (pd.DataFrame): Dataframe that will be trained.
 
         Returns:
-            _type_: _description_
-        """        
+            trained_model, xval (pd.Dataframe):  The datasets that were got after apply machine learning model.
+        """
         dataset = df.drop(columns=['Item_Identifier', 'Outlet_Identifier'])
 
         # Split of the dataset in train y test sets
@@ -122,8 +121,7 @@ class ModelTrainingPipeline(object):
 
         Returns:
             _type_: _description_
-        """        
-        #out_path = '../model'
+        """
         trained_file = "trained_model.pkl"
         model_output = open(os.path.join(self.model_path, trained_file), 'wb')
         print(f'Writing pickle file....')

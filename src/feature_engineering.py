@@ -30,19 +30,13 @@ class FeatureEngineeringPipeline(object):
         self.output_path = output_path
 
     def read_data(self) -> pd.DataFrame:
-        """_summary_
+        """This is a function to read data from the
+        the data folder.
 
         Returns:
-            pd.DataFrame: _description_
+            pd.DataFrame: The desired DataLake table as a DataFrame.
         """
-        
-        """ 
-        :return pandas_df: The desired DataLake table as a DataFrame
-        :rtype: pd.DataFrame
-        """
-
         try:
-            #input_path = '../data/'
             train_file = 'Train_BigMart.csv'
             train_data = os.path.join(self.input_path, train_file)
             data_train = pd.read_csv(train_data)
@@ -62,13 +56,14 @@ class FeatureEngineeringPipeline(object):
 
     
     def data_transformation(self, df: pd.DataFrame) -> pd.DataFrame:
-        """_summary_
+        """This function in used to transform the data and apply EDA 
+        process.
 
         Args:
-            df (pd.DataFrame): _description_
+            df (pd.DataFrame): Dataframe to be transformed.
 
         Returns:
-            pd.DataFrame: _description_
+            pd.DataFrame: Dataframe which was processed by the function.
         """        
         
         df.describe()
@@ -120,18 +115,18 @@ class FeatureEngineeringPipeline(object):
         return data_transformed
 
     def write_prepared_data(self, transformed_df: pd.DataFrame) -> None:
-        """_summary_
+        """This function write the data transforme to the csv file.
 
         Args:
-            transformed_df (pd.DataFrame): _description_
+            transformed_df (pd.DataFrame): This data is gotten during EDA
+            process.
 
         Returns:
-            _type_: _description_
+            transformed_df (pd.Dataframe): _description_
         """        
         try:
-            out_path = '../data'
             name_file = 'dataframe.csv'
-            output_file = os.path.join(out_path, name_file)
+            output_file = os.path.join(self.output_path, name_file)
             transformed_df.to_csv(output_file)
         except Exception as error: 
             print("An exception ocurred: ", type(error).__name__,"-", error) 
