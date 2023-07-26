@@ -1,7 +1,8 @@
 """
 train.py
 
-DESCRIPCTION:
+DESCRIPCTION: In this file you will find the functions
+to train the model and write the result in a csv file
 AUTHORS:
 FS
 Vilcamiza Espinoza, Gerardo Alexis
@@ -83,7 +84,8 @@ class ModelTrainingPipeline(object):
             df (pd.DataFrame): Dataframe that will be trained.
 
         Returns:
-            trained_model, xval (pd.Dataframe):  The datasets that were got after apply machine learning model.
+            trained_model, xval (pd.Dataframe):  The datasets that are gotten  after 
+            apply machine learning model.
         """
         dataset = df.drop(columns=['Item_Identifier', 'Outlet_Identifier'])
 
@@ -117,7 +119,7 @@ class ModelTrainingPipeline(object):
         """_summary_
 
         Args:
-            model_trained (_type_): _description_
+            model_trained (.pkl): _description_
 
         Returns:
             _type_: _description_
@@ -127,6 +129,7 @@ class ModelTrainingPipeline(object):
         print(f'Writing pickle file....')
         pickle.dump(model_trained, model_output)
         model_output.close()
+        print(f'The pickle file was written.')
 
         return None
 
