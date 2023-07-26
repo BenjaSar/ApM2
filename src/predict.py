@@ -12,6 +12,7 @@ FECHA: 24 julio 2023
 import pandas as pd
 import joblib
 import logging
+import pickle
 
 
 class MakePredictionPipeline(object):
@@ -108,7 +109,7 @@ class MakePredictionPipeline(object):
 if __name__ == "__main__":
 
     pipeline = MakePredictionPipeline(
-        input_path='dataframe.csv',
-        output_path='./src',
-        model_path='trained_model')
+        input_path='../data/dataframe.csv',
+        output_path='../predict',
+        model_path='../model/trained_model')
     pipeline.run()

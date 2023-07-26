@@ -42,13 +42,13 @@ class FeatureEngineeringPipeline(object):
         """
 
         try:
-            input_path = '../data/'
+            #input_path = '../data/'
             train_file = 'Train_BigMart.csv'
-            train_data = os.path.join(input_path, train_file)
+            train_data = os.path.join(self.input_path, train_file)
             data_train = pd.read_csv(train_data)
             data_train['Set'] = 'train'
             test_file = 'Test_BigMart.csv'
-            test_data = os.path.join(input_path, test_file)
+            test_data = os.path.join(self.input_path, test_file)
             data_test = pd.read_csv(test_data)
             data_test['Set'] = 'test'
 

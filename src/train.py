@@ -65,9 +65,9 @@ class ModelTrainingPipeline(object):
         :rtype: pd.DataFrame
         """
         try:
-            input_path = '../data/'
+            #input_path = '../data/'
             train_file = 'dataframe.csv'
-            train_data = os.path.join(input_path, train_file)
+            train_data = os.path.join(self.input_path, train_file)
             pandas_df = pd.read_csv(train_data)
 
             print(pandas_df.head(20))
@@ -123,11 +123,12 @@ class ModelTrainingPipeline(object):
         Returns:
             _type_: _description_
         """        
-        out_path = '../model'
-        trained_file = "trained_model"
-        model_output = open(os.path.join(out_path, trained_file), 'wb')
+        #out_path = '../model'
+        trained_file = "trained_model.pkl"
+        model_output = open(os.path.join(self.model_path, trained_file), 'wb')
         print(f'Writing pickle file....')
         pickle.dump(model_trained, model_output)
+        model_output.close()
 
         return None
 
