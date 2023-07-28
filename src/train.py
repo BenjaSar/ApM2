@@ -20,6 +20,44 @@ from sklearn.model_selection import train_test_split
 import pickle
 
 
+def model_metrics(train_x, train_y, y_value, x_value, pred, model: object):
+    """This function receive the model and train parameters and return the
+    metrics evaluation of the model.
+
+
+    Args:
+        train_x (type:array): _description_
+        train_y (type:array): _description_
+        y_value (type:array): _description_
+        x_value (type:array): _description_
+        pred (type:array, shape(n_samples)): _description_
+        model (object): _description_
+    """
+
+    mse_train = metrics.mean_squared_error(train_y, model.predict(train_x))
+    R2_train = model.score(train_x, train_y)
+    print('Model evalatuation metrics:')
+    print(
+        'TRAINING: RMSE: {:.2f} - R2: {:.4f}'.format(mse_train**0.5, R2_train))
+
+    mse_val = metrics.mean_squared_error(y_value, pred)
+    R2_val = model.score(x_value, y_value)
+    print('VALIDATION: RMSE: {:.2f} - R2: {:.4f}'.format(mse_val**0.5, R2_val))
+
+    print('\nModel coefficients:')
+
+    # Model intersection
+    print('Intersection: {:.2f}'.format(model.intercept_))
+
+    coef = pd.DataFrame(train_x.columns, columns=['features'])
+    coef['Estimated coefficients'] = model.coef_
+    print(coef, '\n')
+    coef.sort_values(by='Estimated coefficients').set_index('features').plot(
+        kind='bar', title='Importance of variables', figsize=(12, 6))
+
+    plt.show()
+
+
 def write_model(dataframe_train: pd.DataFrame, dataframe_test: pd.DataFrame):
     """This function receive the dataset for training and testing 
 
@@ -84,8 +122,7 @@ class ModelTrainingPipeline(object):
             df (pd.DataFrame): Dataframe that will be trained.
 
         Returns:
-            trained_model, xval (pd.Dataframe):  The datasets that are gotten  after 
-            apply machine learning model.
+            trained_model, xval (pd.Dataframe):  The datasets that are gotten  after apply machine learning model.
         """
         dataset = df.drop(columns=['Item_Identifier', 'Outlet_Identifier'])
         print(dataset.info())
@@ -113,8 +150,10 @@ class ModelTrainingPipeline(object):
 
         # Training the model
         trained_model = model.fit(x_train, y_train)
-
+        print(x_val)
         predicted_model = model.predict(x_val)
+
+        model_metrics(x_train, y_train, y_val, x_val, predicted_model, model)
 
         return trained_model
 

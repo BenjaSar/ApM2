@@ -2,9 +2,9 @@
 predict.py
 
 DESCRIPCIÓN:
-AUTORS: 
+AUTHORS: 
 Vilcamiza Espinoza, Gerardo Alexis
-Sarmiento Fabián
+FS
 FECHA: 24 julio 2023
 """
 
@@ -12,8 +12,6 @@ FECHA: 24 julio 2023
 import pandas as pd
 import joblib
 import logging
-from train import ModelTrainingPipeline
-
 
 
 class MakePredictionPipeline(object):
@@ -72,9 +70,8 @@ class MakePredictionPipeline(object):
 
         try:
             logging.info("Making predictions on provided data")
-            data = data.drop(['Item_Identifier', 'Item_Outlet_Sales', 'Item_Outlet_Sales', 'Set'], axis=1, inplace=True)
-            new_data = self.model.predict(data)
-            print(self.model)
+            data_modified = data.drop(['Item_Identifier', 'Item_Outlet_Sales', 'Item_Outlet_Sales', 'Set'], axis=1, inplace=True)
+            new_data = self.model.predict(data_modified)
             return new_data
         except Exception as e:
             logging.error("An error occurred while making predictions: {}".format(str(e)))  # noqa E501
