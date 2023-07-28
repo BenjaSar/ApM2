@@ -1,3 +1,4 @@
 .vscode/
 /varios
 *.xcf
+__pycache__

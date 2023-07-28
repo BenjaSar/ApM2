@@ -88,6 +88,7 @@ class ModelTrainingPipeline(object):
             apply machine learning model.
         """
         dataset = df.drop(columns=['Item_Identifier', 'Outlet_Identifier'])
+        print(dataset.info())
 
         # Split of the dataset in train y test sets
         df_train = dataset.loc[df['Set'] == 'train']
@@ -95,7 +96,6 @@ class ModelTrainingPipeline(object):
 
         # Deleting columns without data
         df_train.drop(['Unnamed: 0', 'Set'], axis=1, inplace=True)
-        print(df_train.head(5))
         df_test.drop(['Unnamed: 0', 'Item_Outlet_Sales', 'Set'],
                      axis=1, inplace=True)
 
@@ -107,13 +107,16 @@ class ModelTrainingPipeline(object):
 
         # Splitting of  the dataset in training and validation sets
         X = df_train.drop(columns='Item_Outlet_Sales')
+        X.info()
         x_train, x_val, y_train, y_val = train_test_split(
             X, df_train['Item_Outlet_Sales'], test_size=0.3, random_state=seed)
 
         # Training the model
         trained_model = model.fit(x_train, y_train)
 
-        return trained_model, x_val
+        predicted_model = model.predict(x_val)
+
+        return trained_model
 
     def model_dump(self, model_trained) -> None:
         """_summary_
