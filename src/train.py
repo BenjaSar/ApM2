@@ -124,6 +124,8 @@ class ModelTrainingPipeline(object):
         Returns:
             trained_model, xval (pd.Dataframe):  The datasets that are gotten  after apply machine learning model.
         """
+        #df['Item_MRP'] = pd.qcut(df['Item_MRP'], 4, labels=[1, 2, 3, 4])
+        print(f'Item_MRP', df['Item_MRP'])
         dataset = df.drop(columns=['Item_Identifier', 'Outlet_Identifier'])
         print(dataset.info())
 
@@ -146,7 +148,7 @@ class ModelTrainingPipeline(object):
         X = df_train.drop(columns='Item_Outlet_Sales')
         print(f'Este es el valor de X')
         X.info()
-        y =  df_train['Item_Outlet_Sales']
+        y = df_train['Item_Outlet_Sales']
         x_train, x_val, y_train, y_val = train_test_split(
             X, y, test_size=0.3, random_state=seed)
 

@@ -69,8 +69,9 @@ class MakePredictionPipeline(object):
 
         try:
             logging.info("Making predictions on provided data")
-            data_modified = data.drop(['Item_Identifier', 'Item_Outlet_Sales', 'Item_Outlet_Sales', 'Set'], axis=1, inplace=True)
-            new_data = self.model.predict(data_modified)
+            data.drop(['Unnamed: 0', 'Outlet_Identifier', 'Item_Identifier', 'Item_Outlet_Sales', 'Item_Outlet_Sales', 'Set'], axis=1, inplace=True)
+            data.info()
+            new_data = self.model.predict(data)
             return new_data
         except Exception as e:
             logging.error("An error occurred while making predictions: {}".format(str(e)))  # noqa E501
@@ -108,7 +109,7 @@ class MakePredictionPipeline(object):
 if __name__ == "__main__":
 
     pipeline = MakePredictionPipeline(
-        input_path='../data/dataframe.csv',
-        output_path='../predict',
-        model_path='../model/trained_model.pkl')
+        input_path='./data/dataframe.csv',
+        output_path='./predict',
+        model_path='./model/trained_model.pkl')
     pipeline.run()
