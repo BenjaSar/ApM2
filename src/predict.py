@@ -109,7 +109,7 @@ class MakePredictionPipeline(object):
 if __name__ == "__main__":
 
     pipeline = MakePredictionPipeline(
-        input_path='./data/dataframe.csv',
-        output_path='./predict',
-        model_path='./model/trained_model.pkl')
+        input_path='../data/dataframe.csv',
+        output_path='../predict',
+        model_path='../model/trained_model.pkl')
     pipeline.run()
