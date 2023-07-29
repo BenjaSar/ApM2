@@ -26,11 +26,11 @@ def model_metrics(train_x, train_y, y_value, x_value, pred, model: object):
 
 
     Args:
-        train_x (type:array): _description_
-        train_y (type:array): _description_
-        y_value (type:array): _description_
-        x_value (type:array): _description_
-        pred (type:array, shape(n_samples)): _description_
+        train_x (type:array) 
+        train_y (type:array)
+        y_value (type:array)
+        x_value (type:array)
+        pred (type:array, shape(n_samples)) 
         model (object): _description_
     """
 
@@ -144,9 +144,11 @@ class ModelTrainingPipeline(object):
 
         # Splitting of  the dataset in training and validation sets
         X = df_train.drop(columns='Item_Outlet_Sales')
+        print(f'Este es el valor de X')
         X.info()
+        y =  df_train['Item_Outlet_Sales']
         x_train, x_val, y_train, y_val = train_test_split(
-            X, df_train['Item_Outlet_Sales'], test_size=0.3, random_state=seed)
+            X, y, test_size=0.3, random_state=seed)
 
         # Training the model
         trained_model = model.fit(x_train, y_train)
@@ -161,10 +163,11 @@ class ModelTrainingPipeline(object):
         """_summary_
 
         Args:
-            model_trained (.pkl): _description_
+            model_trained (.pkl): The final file after to 
+            train the mahcine learning model
 
         Returns:
-            _type_: _description_
+           None
         """
         trained_file = "trained_model.pkl"
         model_output = open(os.path.join(self.model_path, trained_file), 'wb')

@@ -4,7 +4,6 @@ predict.py
 DESCRIPCIÓN:
 AUTHORS: 
 Vilcamiza Espinoza, Gerardo Alexis
-FS
 FECHA: 24 julio 2023
 """
 
@@ -78,8 +77,8 @@ class MakePredictionPipeline(object):
             return pd.DataFrame()
 
     def write_predictions(self, predicted_data: pd.DataFrame) -> None:
-        """
-        Write the predicted data to a CSV file.
+        """This function write the data wich is gotten from the prediction
+        to CSV file
 
         Args:
             predicted_data (pd.DataFrame): The predicted data.
