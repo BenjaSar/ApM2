@@ -37,7 +37,7 @@ class MakePredictionPipeline(object):
             logging.error("File not found: {}".format(self.input_path))
             return pd.DataFrame()
         except Exception as e:
-            logging.error("An error occurred while loading data: {}".format(str(e)))  # noqa E501
+            logging.error("An error occurred while loading data: {}".format(str(e))) 
             return pd.DataFrame()
 
     def load_model(self) -> None:

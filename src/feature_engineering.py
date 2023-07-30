@@ -4,7 +4,6 @@ feature_engineering.py
 DESCRIPTION:
 AUTHORS:
 FS
-Vilcamiza Espinoza, Gerardo Alexis
 Date: July 19th 2023
 """
 
