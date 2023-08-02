@@ -2,7 +2,8 @@
 predict.py
 
 DESCRIPCIÓN:
-AUTHORS: 
+AUTHORS:
+FS 
 Vilcamiza Espinoza, Gerardo Alexis
 FECHA: 24 julio 2023
 """
@@ -50,11 +51,11 @@ class MakePredictionPipeline(object):
 
         try:
             logging.info("Loading model from: {}".format(self.model_path))
-            self.model = joblib.load(self.model_path)  # library  # noqa E501
+            self.model = joblib.load(self.model_path) 
         except FileNotFoundError:
             logging.error("File not found: {}".format(self.model_path))
         except Exception as e:
-            logging.error("An error occurred while loading the model: {}".format(str(e)))  # noqa E501
+            logging.error("An error occurred while loading the model: {}".format(str(e))) 
 
     def make_predictions(self, data: pd.DataFrame) -> pd.DataFrame:
         """
@@ -74,7 +75,7 @@ class MakePredictionPipeline(object):
             new_data = self.model.predict(data)
             return new_data
         except Exception as e:
-            logging.error("An error occurred while making predictions: {}".format(str(e)))  # noqa E501
+            logging.error("An error occurred while making predictions: {}".format(str(e)))
             return pd.DataFrame()
 
     def write_predictions(self, predicted_data: pd.DataFrame) -> None:
@@ -96,7 +97,7 @@ class MakePredictionPipeline(object):
             )
             df_predicted_data.to_csv(self.output_path + '/predictions.csv')
         except Exception as e:
-            logging.error("An error occurred while writing predictions: {}".format(str(e)))  # noqa E501
+            logging.error("An error occurred while writing predictions: {}".format(str(e)))
 
     def run(self):
 
