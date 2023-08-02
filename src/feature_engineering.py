@@ -10,10 +10,6 @@ Date: July 19th 2023
 # Imports
 import os
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import datetime as dt
-from scipy import stats
 
 
 class FeatureEngineeringPipeline(object):
@@ -97,9 +93,7 @@ class FeatureEngineeringPipeline(object):
         # FEATURES ENGINEERING: Generating categories for 'Item_Type'
         df['Item_Type'] = df['Item_Type'].replace({'Others': 'Non perishable', 'Health and Hygiene': 'Non perishable', 'Household': 'Non perishable',
                                                    'Seafood': 'Meats', 'Meat': 'Meats', 'Baking Goods': 'Processed Foods',
-                                                   'Frozen Foods': 'Processed Foods', 'Canned': 'Processed Foods', 'Snack Foods': 'Processed Foods',
-                                                   'Breads': 'Starchy Foods', 'Breakfast': 'Starchy Foods',
-                                                   'Soft Drinks': 'Drinks', 'Hard Drinks': 'Drinks', 'Dairy': 'Drinks'})
+                                                   'Frozen Foods': 'Processed Foods', 'Canned': 'Processed Foods', 'Snack Foods': 'Processed Foods', 'Breads': 'Starchy Foods', 'Breakfast': 'Starchy Foods', 'Soft Drinks': 'Drinks', 'Hard Drinks': 'Drinks', 'Dairy': 'Drinks'})
 
         # Codificación de los precios de productos
         print(pd.qcut(df['Item_MRP'], 4,).unique())
@@ -141,9 +135,10 @@ class FeatureEngineeringPipeline(object):
         return None
 
     def run(self):
-
-        df = self.read_data()
-        df_transformed = self.data_transformation(df)
+        """This functios is used to read, transform and 
+        write to csv file the data transformed."""
+        data_frame = self.read_data()
+        df_transformed = self.data_transformation(data_frame)
         self.write_prepared_data(df_transformed)
 
 
