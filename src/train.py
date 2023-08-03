@@ -34,19 +34,22 @@ def model_metrics(train_x, train_y, y_value, x_value, pred, model: object):
     """
 
     mse_train = metrics.mean_squared_error(train_y, model.predict(train_x))
+    mse_training = mse_train**2
     r2_train = model.score(train_x, train_y)
     print('Model evalatuation metrics:')
     print(
-        'TRAINING: RMSE: {:.2f} - R2: {:.4f}'.format(mse_train**0.5, r2_train))
+        f'TRAINING: RMSE: {mse_training:.2f} - R2: {r2_train:.4f}')
 
     mse_val = metrics.mean_squared_error(y_value, pred)
+    mse_validation = mse_val**2
     r2_val = model.score(x_value, y_value)
-    print('VALIDATION: RMSE: {:.2f} - R2: {:.4f}'.format(mse_val**0.5, r2_val))
+    model_intercept =  model.intercept_
+    print(f'VALIDATION: RMSE: {mse_validation:.2f} - R2: {r2_val:.4f}')
 
     print('\nModel coefficients:')
 
     # Model intersection
-    print('Intersection: {:.2f}'.format(model.intercept_))
+    print(f'Intersection: {model_intercept:.2f}')
 
     coef = pd.DataFrame(train_x.columns, columns=['features'])
     coef['Estimated coefficients'] = model.coef_
@@ -120,7 +123,8 @@ class ModelTrainingPipeline(object):
             df (pd.DataFrame): Dataframe that will be trained.
 
         Returns:
-            trained_model, xval (pd.Dataframe):  The datasets that are gotten after apply machine learning model.
+            trained_model, xval (pd.Dataframe):  The datasets that are 
+            gotten after apply machine learning model.
         """
         # df['Item_MRP'] = pd.qcut(df['Item_MRP'], 4, labels=[1, 2, 3, 4])
         print('Item_MRP', df['Item_MRP'])
