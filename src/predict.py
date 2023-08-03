@@ -38,7 +38,8 @@ class MakePredictionPipeline(object):
             logging.error("File not found: {}".format(self.input_path))
             return pd.DataFrame()
         except Exception as e:
-            logging.error("An error occurred while loading data: {}".format(str(e))) 
+            logging.exception(
+                "An error occurred while loading data: {}".format(str(e)))
             return pd.DataFrame()
 
     def load_model(self) -> None:
@@ -51,11 +52,12 @@ class MakePredictionPipeline(object):
 
         try:
             logging.info("Loading model from: {}".format(self.model_path))
-            self.model = joblib.load(self.model_path) 
+            self.model = joblib.load(self.model_path)
         except FileNotFoundError:
             logging.error("File not found: {}".format(self.model_path))
         except Exception as e:
-            logging.error("An error occurred while loading the model: {}".format(str(e))) 
+            logging.exception(
+                "An error occurred while loading the model: {}".format(str(e)))
 
     def make_predictions(self, data: pd.DataFrame) -> pd.DataFrame:
         """
@@ -70,12 +72,14 @@ class MakePredictionPipeline(object):
 
         try:
             logging.info("Making predictions on provided data")
-            data.drop(['Unnamed: 0', 'Outlet_Identifier', 'Item_Identifier', 'Item_Outlet_Sales', 'Item_Outlet_Sales', 'Set'], axis=1, inplace=True)
+            data.drop(['Unnamed: 0', 'Outlet_Identifier', 'Item_Identifier',
+                      'Item_Outlet_Sales', 'Item_Outlet_Sales', 'Set'], axis=1, inplace=True)
             data.info()
             new_data = self.model.predict(data)
             return new_data
         except Exception as e:
-            logging.error("An error occurred while making predictions: {}".format(str(e)))
+            logging.exception(
+                "An error occurred while making predictions: {}".format(str(e)))
             return pd.DataFrame()
 
     def write_predictions(self, predicted_data: pd.DataFrame) -> None:
@@ -97,10 +101,13 @@ class MakePredictionPipeline(object):
             )
             df_predicted_data.to_csv(self.output_path + '/predictions.csv')
         except Exception as e:
-            logging.error("An error occurred while writing predictions: {}".format(str(e)))
+            logging.error(
+                "An error occurred while writing predictions: {}".format(str(e)))
 
     def run(self):
-
+        """This function is used to load the trained model, to make the 
+        predictions of the model and to write the result in csv file.
+        """
         data = self.load_data()
         self.load_model()
         df_preds = self.make_predictions(data)

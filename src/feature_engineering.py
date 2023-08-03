@@ -45,8 +45,9 @@ class FeatureEngineeringPipeline(object):
                                   ignore_index=True, sort=False)
             print(pandas_df.head(20))
 
-        except Exception as error:
-            print("An exception ocurred: ", type(error).__name__, "-", error)
+        except FileNotFoundError:
+            msg = 'No such file or directory'
+            print(msg)
 
         return pandas_df
 
@@ -91,7 +92,8 @@ class FeatureEngineeringPipeline(object):
         df.loc[df['Item_Type'] == 'Non perishable', 'Item_Fat_Content'] = 'NA'
 
         # FEATURES ENGINEERING: Generating categories for 'Item_Type'
-        df['Item_Type'] = df['Item_Type'].replace({'Others': 'Non perishable', 'Health and Hygiene': 'Non perishable', 'Household': 'Non perishable',
+        df['Item_Type'] = df['Item_Type'].replace({'Others': 'Non perishable',
+                                                   'Health and Hygiene': 'Non perishable', 'Household': 'Non perishable',
                                                    'Seafood': 'Meats', 'Meat': 'Meats', 'Baking Goods': 'Processed Foods',
                                                    'Frozen Foods': 'Processed Foods', 'Canned': 'Processed Foods', 'Snack Foods': 'Processed Foods', 'Breads': 'Starchy Foods', 'Breakfast': 'Starchy Foods', 'Soft Drinks': 'Drinks', 'Hard Drinks': 'Drinks', 'Dairy': 'Drinks'})
 
@@ -129,14 +131,14 @@ class FeatureEngineeringPipeline(object):
             name_file = 'dataframe.csv'
             output_file = os.path.join(self.output_path, name_file)
             transformed_df.to_csv(output_file)
-        except Exception as error:
-            print("An exception ocurred: ", type(error).__name__, "-", error)
+        except (IOError, OSError):
+            print("Error writing to file")
 
         return None
 
     def run(self):
         """This functios is used to read, transform and 
-        write to csv file the data transformed."""
+        write to csv file the transformed data."""
         data_frame = self.read_data()
         df_transformed = self.data_transformation(data_frame)
         self.write_prepared_data(df_transformed)

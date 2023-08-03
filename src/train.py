@@ -11,13 +11,12 @@ Date: July 22rd 2023
 
 # Imports
 import os
+import pickle
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import metrics
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
-import pickle
 
 
 def model_metrics(train_x, train_y, y_value, x_value, pred, model: object):
@@ -35,14 +34,14 @@ def model_metrics(train_x, train_y, y_value, x_value, pred, model: object):
     """
 
     mse_train = metrics.mean_squared_error(train_y, model.predict(train_x))
-    R2_train = model.score(train_x, train_y)
+    r2_train = model.score(train_x, train_y)
     print('Model evalatuation metrics:')
     print(
-        'TRAINING: RMSE: {:.2f} - R2: {:.4f}'.format(mse_train**0.5, R2_train))
+        'TRAINING: RMSE: {:.2f} - R2: {:.4f}'.format(mse_train**0.5, r2_train))
 
     mse_val = metrics.mean_squared_error(y_value, pred)
-    R2_val = model.score(x_value, y_value)
-    print('VALIDATION: RMSE: {:.2f} - R2: {:.4f}'.format(mse_val**0.5, R2_val))
+    r2_val = model.score(x_value, y_value)
+    print('VALIDATION: RMSE: {:.2f} - R2: {:.4f}'.format(mse_val**0.5, r2_val))
 
     print('\nModel coefficients:')
 
@@ -75,12 +74,12 @@ def write_model(dataframe_train: pd.DataFrame, dataframe_test: pd.DataFrame):
         output_train = os.path.join(out_path, train_file)
         output_test = os.path.join(out_path, test_file)
         dataframe_train.to_csv(output_train)
-        print(f'Writing  dataframe train...')
+        print('Writing  dataframe train...')
         dataframe_test.to_csv(output_test)
-        print(f'Writing dataframe test...')
+        print('Writing dataframe test...')
 
-    except Exception as error:
-        print("An exception has ocurred: ", type(error).__name__, "-", error)
+    except (IOError, OSError):
+        print("Error writing to file")
 
     return train_file, test_file
 
@@ -109,9 +108,8 @@ class ModelTrainingPipeline(object):
 
             print(pandas_df.head(20))
 
-        except Exception as error:
-            print("An exception has ocurred: ",
-                  type(error).__name__, "-", error)
+        except (FileNotFoundError, PermissionError, OSError):
+            print("Error opening file")
 
         return pandas_df
 
@@ -122,10 +120,10 @@ class ModelTrainingPipeline(object):
             df (pd.DataFrame): Dataframe that will be trained.
 
         Returns:
-            trained_model, xval (pd.Dataframe):  The datasets that are gotten  after apply machine learning model.
+            trained_model, xval (pd.Dataframe):  The datasets that are gotten after apply machine learning model.
         """
         # df['Item_MRP'] = pd.qcut(df['Item_MRP'], 4, labels=[1, 2, 3, 4])
-        print(f'Item_MRP', df['Item_MRP'])
+        print('Item_MRP', df['Item_MRP'])
         dataset = df.drop(columns=['Item_Identifier', 'Outlet_Identifier'])
         print(dataset.info())
 
@@ -146,7 +144,7 @@ class ModelTrainingPipeline(object):
 
         # Splitting of  the dataset in training and validation sets
         X = df_train.drop(columns='Item_Outlet_Sales')
-        print(f'Este es el valor de X')
+        print('Este es el valor de X')
         X.info()
         y = df_train['Item_Outlet_Sales']
         x_train, x_val, y_train, y_val = train_test_split(
@@ -171,19 +169,26 @@ class ModelTrainingPipeline(object):
         Returns:
            None
         """
-        trained_file = "trained_model.pkl"
-        model_output = open(os.path.join(self.model_path, trained_file), 'wb')
-        print(f'Writing pickle file....')
-        pickle.dump(model_trained, model_output)
-        model_output.close()
-        print(f'The pickle file was written.')
+        try:
+            trained_file = "trained_model.pkl"
+            model_output = open(os.path.join(
+                self.model_path, trained_file), 'wb')
+            print('Writing pickle file....')
+            pickle.dump(model_trained, model_output)
+            model_output.close()
+            print('The pickle file was written.')
+
+        except (IOError, OSError):
+            print("Error writing to file")
 
         return None
 
     def run(self):
+        """This functios is used to read, transform and 
+        write to csv file the tranine data."""
 
-        df = self.read_data()
-        model_trained = self.model_training(df)
+        data_frame = self.read_data()
+        model_trained = self.model_training(data_frame)
         self.model_dump(model_trained)
 
 
