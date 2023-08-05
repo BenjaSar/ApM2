@@ -2,3 +2,5 @@
 /varios
 *.xcf
 __pycache__
+*.sqlite
+/mlflow
