@@ -21,7 +21,7 @@ class MakePredictionPipeline(object):
 
     Args:
         object (_type_): _description_
-    """    
+    """
     def __init__(self, input_path, output_path, model_path: str = None):
         self.input_path = input_path
         self.output_path = output_path
@@ -43,7 +43,7 @@ class MakePredictionPipeline(object):
         except FileNotFoundError:
             logging.error("File not found: {self.input_path}")
             return pd.DataFrame()
-        except Exception as error_load_file:
+        except (PermissionError, OSError) as error_load_file:
             logging.exception(
                 "An error occurred while loading data: %s", error_load_file)
             return pd.DataFrame()
@@ -61,7 +61,7 @@ class MakePredictionPipeline(object):
             self.model = joblib.load(self.model_path)
         except FileNotFoundError:
             logging.error("File not found: {self.model_path}")
-        except Exception as error_load_model:
+        except(PermissionError, OSError) as error_load_model:
             logging.exception(
                 "An error occurred while loading the model: %s",error_load_model)
 
@@ -106,7 +106,7 @@ class MakePredictionPipeline(object):
                 columns=['Prediction']
             )
             df_predicted_data.to_csv(self.output_path + '/predictions.csv')
-        except Exception as error_write_file:
+        except (PermissionError, OSError) as error_write_file:
             logging.error(
                 "An error occurred while writing predictions: %s",error_write_file)
 

@@ -43,7 +43,6 @@ class FeatureEngineeringPipeline(object):
 
             pandas_df = pd.concat([data_train, data_test],
                                   ignore_index=True, sort=False)
-            print(pandas_df.head(20))
 
         except FileNotFoundError:
             msg = 'No such file or directory'

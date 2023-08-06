@@ -12,11 +12,13 @@ Date: July 22rd 2023
 # Imports
 import os
 import pickle
+import logging
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn import metrics
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
+
 
 
 def model_metrics(train_x, train_y, y_value, x_value, pred, model: object):
@@ -77,8 +79,10 @@ def write_model(dataframe_train: pd.DataFrame, dataframe_test: pd.DataFrame):
         output_train = os.path.join(out_path, train_file)
         output_test = os.path.join(out_path, test_file)
         dataframe_train.to_csv(output_train)
+        logging.info("Writing dataframe train:  {self.output_train}" )
         print('Writing  dataframe train...')
         dataframe_test.to_csv(output_test)
+        logging.info("Writing dataframe test:  {self.output_test}" )
         print('Writing dataframe test...')
 
     except (IOError, OSError):
@@ -107,9 +111,9 @@ class ModelTrainingPipeline(object):
         try:
             train_file = 'dataframe.csv'
             train_data = os.path.join(self.input_path, train_file)
+            logging.info("Loading data from:  {self.input_path}" )
             pandas_df = pd.read_csv(train_data)
 
-            print(pandas_df.head(20))
 
         except (FileNotFoundError, PermissionError, OSError):
             print("Error opening file")
