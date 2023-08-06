@@ -1,7 +1,16 @@
+"""
+tuning_hyperparameters.py
+
+DESCRIPCIÓN:
+AUTHORS:
+FS 
+FECHA: August 6th 2023
+"""
 # Imports
 import logging
 import os
 import optuna
+from optuna import Trial, visualization
 from optuna.samplers import TPESampler
 import xgboost as xgboost_regressor
 import pandas as pd
@@ -24,7 +33,6 @@ def pre_processing(pandas_df: pd.DataFrame):
     """
     print('Item_MRP', pandas_df['Item_MRP'])
     dataset = pandas_df.drop(columns=['Item_Identifier', 'Outlet_Identifier'])
-    print(dataset.info())
 
     # Split of the dataset in train y test sets
     df_train = dataset.loc[pandas_df['Set'] == 'train']
@@ -90,7 +98,7 @@ class TuningHyperParametersPipeline(object):
         # Splitting of  the dataset in training and validation sets
         X = df_train.drop(columns='Item_Outlet_Sales')
         print('Este es el valor de X')
-        X.info()
+
         y = df_train['Item_Outlet_Sales']
 
         x_train, _, y_train, _ = train_test_split(
@@ -116,10 +124,12 @@ class TuningHyperParametersPipeline(object):
         return score_model
 
     def return_score(self, param):
-        """_summary_
+        """This functions is used to return the 
+        score after applying xgboost regressor.
 
         Args:
-            param (_type_): _description_
+            param (_type_): variable used like parametor to pass 
+            the XGB Regressor function.
 
         Returns:
             float: metric gotten after of the
@@ -147,8 +157,8 @@ class TuningHyperParametersPipeline(object):
         return self.return_score(param)
 
     def run(self):
-        """This function is used to load the trained model, to make the 
-        predictions of the model and to write the result in csv file.
+        """This function is used to load the dataframe, to make the 
+        training  of the model and to print the best estimator.
         """
         data_frame = self.load_data()
         x_trained, y_trained = self.model_to_train(data_frame)
@@ -156,7 +166,11 @@ class TuningHyperParametersPipeline(object):
         study_object = optuna.create_study(
             direction='minimize', sampler=TPESampler())
         study_object.optimize(self.objective, n_trials=200)
+        
+        fig = optuna.visualization.plot_parallel_coordinate(study_object)
+        fig.show()
 
+        print(study_object.best_params)
 
 if __name__ == "__main__":
 
